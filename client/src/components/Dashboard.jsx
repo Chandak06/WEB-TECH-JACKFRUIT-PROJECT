@@ -82,15 +82,15 @@ const Dashboard = () => {
       <Navbar isAuthenticated={true} user={user} />
 
       {/* Background gradients */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-[radial-gradient(ellipse_at_top,rgba(120,119,198,0.15),transparent_50%)]"></div>
+        <div className="absolute top-0 left-0 right-0 h-1/2 bg-[radial-gradient(ellipse_at_top,rgba(120,119,198,0.15),transparent_50%)]"></div>
         <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_50%)]"></div>
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="relative z-10 pt-24 pb-12">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">

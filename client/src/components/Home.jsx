@@ -114,7 +114,7 @@ const Home = () => {
         {/* Background gradients - fixed positioning */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-[radial-gradient(ellipse_at_top,rgba(120,119,198,0.15),transparent_50%)]"></div>
+          <div className="absolute top-0 left-0 right-0 h-1/2 bg-[radial-gradient(ellipse_at_top,rgba(120,119,198,0.15),transparent_50%)]"></div>
           <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.1),transparent_50%)]"></div>
           {/* Animated gradient orbs */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float"></div>
@@ -123,7 +123,7 @@ const Home = () => {
 
         {/* HEADER */}
         <header className="w-full glass sticky top-0 z-50 border-b border-white/10 shadow-xl">
-          <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 py-4 flex items-center justify-between">
+          <div className="w-full px-6 sm:px-8 lg:px-12 py-4 flex items-center justify-between">
             <a href="#" className="flex items-center gap-3 cursor-pointer group">
               <div className="transform group-hover:scale-110 transition-transform duration-300">
                 <Logo />
@@ -147,7 +147,7 @@ const Home = () => {
           </div>
         </header>
           <section className="w-full py-28 z-10">
-            <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 text-center">
+            <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 text-center">
               <div className="inline-flex items-center justify-center mb-6">
                 <span className="animate-ping inline-flex h-3 w-3 rounded-full bg-violet-400 opacity-75 mr-2"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-500 mr-3"></span>
@@ -200,7 +200,7 @@ const Home = () => {
 
         {/* FEATURES SECTION */}
         <section className="w-full bg-slate-900/50 py-24 z-10">
-          <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8">
+          <div className="max-w-7xl mx-auto w-full px-6 sm:px-8">
             <div className="text-center mb-16 animate-fadeInUp">
               <h2 className="text-4xl md:text-5xl font-bold">Why Skill Swap is Different</h2>
               <p className="text-slate-400 mt-5 max-w-3xl mx-auto text-lg">
@@ -232,7 +232,7 @@ const Home = () => {
 
         {/* TESTIMONIALS */}
         <section id="testimonials" className="w-full py-24 z-10 relative">
-          <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 lg:px-12">
             <div className="text-center mb-20 animate-fadeInUp">
               <span className="inline-block px-4 py-2 rounded-full glass border border-pink-500/30 text-pink-400 text-sm font-semibold mb-4">
                 TESTIMONIALS
@@ -285,7 +285,7 @@ const Home = () => {
 
         {/* FOOTER */}
         <footer className="w-full border-t border-white/10 z-10 glass">
-          <div className="w-full max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 py-10">
+          <div className="max-w-7xl mx-auto w-full px-6 sm:px-8 lg:px-12 py-10">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
               <div className="col-span-1 md:col-span-2">
                 <div className="flex items-center gap-3 mb-4">
