@@ -92,7 +92,7 @@ const Navbar = ({ isAuthenticated = false, user = null }) => {
                       <p className="text-xs text-slate-400">{user?.email || 'user@example.com'}</p>
                     </div>
                     <button
-                      onClick={() => { navigate('/profile'); setIsProfileMenuOpen(false); }}
+                      onClick={() => { navigate(`/profile/${user?.id || '1'}`); setIsProfileMenuOpen(false); }}
                       className="w-full text-left px-4 py-2 text-sm text-slate-300 hover:bg-white/5 transition-colors"
                     >
                       My Profile
