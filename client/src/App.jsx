@@ -1,37 +1,30 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
-import Home from './components/Home.jsx';
-import Login from './components/Login.jsx';
-import SignUp from './components/SignUp.jsx';
-import Dashboard from './components/Dashboard.jsx';
-import Browse from './components/Browse.jsx';
-import MySessions from './components/MySessions.jsx';
-import Profile from './components/Profile.jsx';
-import Messages from './components/Messages.jsx';
-import Settings from './components/Settings.jsx';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./Pages/HomePage.jsx";
+import Login from "./Pages/LoginPage.jsx";
+import Signup from "./Pages/SignupPage.jsx";
+import DashBoardPage from "./Pages/DashBoardPage.jsx";
+import SkillsPage from "./Pages/SkillsPage.jsx";
+import OfferSkillPage from "./Pages/OfferSkillPage.jsx";
+import SkillsDetailsPage from "./Pages/SkillsDetailsPage.jsx";
+import RequestPage from "./Pages/RequestPage.jsx";
+import ProfilePage from "./Pages/ProfilePage.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 const App = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/signup" element={<SignUp/>}/>
-          
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
-          <Route path="/browse" element={<ProtectedRoute><Browse/></ProtectedRoute>}/>
-          <Route path="/sessions" element={<ProtectedRoute><MySessions/></ProtectedRoute>}/>
-          <Route path="/profile/:id" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
-          <Route path="/messages" element={<ProtectedRoute><Messages/></ProtectedRoute>}/>
-          <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>}/>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  )
-}
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/skills" element={<SkillsPage />} />
+      <Route path="/skill/:id" element={<SkillsDetailsPage />} />
+  <Route path="/offer" element={<ProtectedRoute><OfferSkillPage /></ProtectedRoute>} />
+  <Route path="/requests" element={<ProtectedRoute><RequestPage /></ProtectedRoute>} />
+  <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+  <Route path="/dashboard" element={<ProtectedRoute><DashBoardPage /></ProtectedRoute>} />
+    </Routes>
+  );
+};
 
-export default App
+export default App;

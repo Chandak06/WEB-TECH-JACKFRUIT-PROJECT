@@ -1,0 +1,130 @@
+:root {
+    --bg: #f7fafc;
+    --card: #fff;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --accent-2: #7c3aed
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    background: var(--bg)
+}
+
+.sd-root {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 18px
+}
+
+.sd-card {
+    background: var(--card);
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(12, 18, 31, 0.06);
+}
+
+.sd-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px
+}
+
+.sd-meta {
+    margin-top: 6px;
+    color: var(--muted)
+}
+
+.level {
+    background: #f1f5f9;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-right: 8px
+}
+
+.sd-actions {
+    display: flex;
+    gap: 8px
+}
+
+.sd-body {
+    margin-top: 16px
+}
+
+.desc {
+    color: var(--muted)
+}
+
+.tags {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px
+}
+
+.pill {
+    background: #eef2ff;
+    padding: 6px 8px;
+    border-radius: 999px;
+    color: var(--muted)
+}
+
+.provider-card {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff, #fbfdff);
+    box-shadow: 0 6px 18px rgba(12, 18, 31, 0.03)
+}
+
+.prov-row {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700
+}
+
+.btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(12, 18, 31, 0.06);
+    background: transparent;
+    cursor: pointer
+}
+
+.btn-primary {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: white;
+    cursor: pointer
+}
+
+@media (max-width:720px) {
+    .sd-top {
+        flex-direction: column;
+        align-items: flex-start
+    }
+
+    .sd-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start
+    }
+}

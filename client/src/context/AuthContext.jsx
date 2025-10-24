@@ -1,94 +1,48 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext();
+const KEY = "skillswap_user_v1";
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in (check localStorage/sessionStorage)
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) setUser(JSON.parse(raw));
+    } catch (err) {
+      console.warn("Failed to read auth", err);
     }
-    setIsLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = (u) => {
+    setUser(u);
     try {
-      // TODO: Replace with actual API call
-      const mockUser = {
-        id: '1',
-        name: 'John Doe',
-        email: email,
-        avatar: null
-      };
-      
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return { success: true };
-    } catch (error) {
-      console.error('Login error:', error);
-      return { success: false, error: error.message };
-    }
-  };
-
-  const signup = async (name, email, password) => {
-    try {
-      // TODO: Replace with actual API call
-      const mockUser = {
-        id: '1',
-        name: name,
-        email: email,
-        avatar: null
-      };
-      
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return { success: true };
-    } catch (error) {
-      console.error('Signup error:', error);
-      return { success: false, error: error.message };
+      localStorage.setItem(KEY, JSON.stringify(u));
+    } catch (err) {
+      console.warn("Failed to save auth", err);
     }
   };
 
   const logout = () => {
     setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
-  };
-
-  const updateUser = (updatedUser) => {
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-  };
-
-  const value = {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    signup,
-    logout,
-    updateUser
+    try {
+      localStorage.removeItem(KEY);
+    } catch (err) {
+      console.warn("Failed to remove auth", err);
+    }
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isAuthenticated: !!user }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
+
+export default AuthContext;
