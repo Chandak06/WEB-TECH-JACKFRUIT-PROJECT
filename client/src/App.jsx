@@ -9,7 +9,7 @@ import OfferSkillPage from "./Pages/OfferSkillPage.jsx";
 import SkillsDetailsPage from "./Pages/SkillsDetailsPage.jsx";
 import RequestPage from "./Pages/RequestPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
   return (
@@ -19,10 +19,38 @@ const App = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/skill/:id" element={<SkillsDetailsPage />} />
-  <Route path="/offer" element={<ProtectedRoute><OfferSkillPage /></ProtectedRoute>} />
-  <Route path="/requests" element={<ProtectedRoute><RequestPage /></ProtectedRoute>} />
-  <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-  <Route path="/dashboard" element={<ProtectedRoute><DashBoardPage /></ProtectedRoute>} />
+      <Route
+        path="/offer"
+        element={
+          <ProtectedRoute>
+            <OfferSkillPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/requests"
+        element={
+          <ProtectedRoute>
+            <RequestPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashBoardPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 };
