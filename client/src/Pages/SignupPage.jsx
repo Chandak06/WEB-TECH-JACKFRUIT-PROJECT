@@ -18,7 +18,7 @@ const Signup = () => {
     const prof = { name: name || email.split('@')[0], email, location: '', bio: '', offered: [], wanted: [] }
     try { updateProfile(prof) } catch (err) { console.warn(err) }
     login({ name: prof.name, email })
-    navigate('/dashboard')
+    navigate('/')
   }
 
   return (

@@ -20,7 +20,7 @@ const Login = () => {
   } catch (err) { console.warn(err) }
 
     login({ name, email })
-    navigate('/dashboard')
+    navigate('/')
   }
 
   return (

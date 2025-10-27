@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useData } from "../context/DataContext";
 import "../styles/HomePage.css";
 
 const HomePage = () => {
   const { user, logout, isAuthenticated } = useAuth()
   const navigate = useNavigate()
+  const { skills = [], requests = [], profile } = useData();
 
   const handleLogout = () => {
     logout()
@@ -37,19 +39,33 @@ const HomePage = () => {
 
       <header className="hp-hero">
         <div className="hp-hero-inner">
-          <h1 className="hp-title">SkillSwap</h1>
-          <p className="hp-sub">
-            Swap skills with classmates — teach what you know, learn what you
-            don't.
-          </p>
-          <div className="hp-cta">
-            <a className="btn primary" href="#features">
-              Get Started
-            </a>
-            <a className="btn" href="#how">
-              How it works
-            </a>
-          </div>
+          {isAuthenticated ? (
+            <>
+              <h1 className="hp-title">Welcome back, {user?.name?.split(' ')[0] ?? profile?.name ?? 'friend'}</h1>
+              <p className="hp-sub">Good to see you — manage your listings, view requests, or create a new offer.</p>
+              <div className="hp-cta">
+                <Link className="btn primary" to="/dashboard">Go to dashboard</Link>
+                <Link className="btn" to="/offer">Offer a skill</Link>
+                <Link className="btn" to="/skills">Browse skills</Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <h1 className="hp-title">SkillSwap</h1>
+              <p className="hp-sub">
+                Swap skills with classmates — teach what you know, learn what you
+                don't.
+              </p>
+              <div className="hp-cta">
+                <a className="btn primary" href="#features">
+                  Get Started
+                </a>
+                <a className="btn" href="#how">
+                  How it works
+                </a>
+              </div>
+            </>
+          )}
         </div>
         <div className="hp-hero-art" aria-hidden="true">
           <div className="hp-blob" />
@@ -115,14 +131,27 @@ const HomePage = () => {
 
         <section className="hp-action">
           <div className="action-inner">
-            <h3>Ready to share what you know?</h3>
-            <p>
-              Make your first listing in a few quick steps — it only takes a
-              minute.
-            </p>
-            <a className="btn primary large" href="#">
-              Create a listing
-            </a>
+            {isAuthenticated ? (
+              <>
+                <h3>Your quick actions</h3>
+                <p>Offered: {(skills || []).filter(s => s.provider === (profile?.name || user?.name)).length} · Pending requests: {(requests || []).filter(r => r.status === 'pending').length}</p>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <Link to="/offer" className="btn primary large">Create a listing</Link>
+                  <Link to="/dashboard" className="btn large">Open dashboard</Link>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3>Ready to share what you know?</h3>
+                <p>
+                  Make your first listing in a few quick steps — it only takes a
+                  minute.
+                </p>
+                <a className="btn primary large" href="#">
+                  Create a listing
+                </a>
+              </>
+            )}
           </div>
         </section>
       </main>
