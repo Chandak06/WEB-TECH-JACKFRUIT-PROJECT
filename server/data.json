@@ -1,0 +1,83 @@
+{
+  "skills": [
+    {
+      "id": 1,
+      "title": "Intro to React",
+      "level": "Beginner",
+      "provider": "Alex J",
+      "tags": [
+        "react",
+        "web"
+      ],
+      "desc": "Learn components, props, and hooks in a 45-min session."
+    },
+    {
+      "id": 2,
+      "title": "HTML & CSS Basics",
+      "level": "Beginner",
+      "provider": "Sam P",
+      "tags": [
+        "html",
+        "css",
+        "responsive"
+      ],
+      "desc": "Semantics, layout, and responsive techniques."
+    },
+    {
+      "id": 3,
+      "title": "Figma UI Workshop",
+      "level": "Intermediate",
+      "provider": "Priya S",
+      "tags": [
+        "design",
+        "figma"
+      ],
+      "desc": "Design fundamentals and simple UI prototyping."
+    },
+    {
+      "id": 4,
+      "title": "Photography 101",
+      "level": "Beginner",
+      "provider": "Ravi K",
+      "tags": [
+        "photo",
+        "editing"
+      ],
+      "desc": "Basics of composition and mobile editing."
+    },
+    {
+      "id": 5,
+      "title": "Git & GitHub",
+      "level": "Intermediate",
+      "provider": "Lina M",
+      "tags": [
+        "git",
+        "version-control"
+      ],
+      "desc": "Commits, branches, and PR workflow."
+    }
+  ],
+  "requests": [
+    {
+      "id": 1698350400000,
+      "skill": "Intro to React",
+      "from": "Sam P",
+      "message": "Can we do this tomorrow evening?",
+      "date": "2025-10-20",
+      "status": "pending"
+    }
+  ],
+  "profile": {
+    "name": "Alex Johnson",
+    "email": "alex.johnson@student.edu",
+    "location": "Campus Library",
+    "bio": "Computer Science student who loves teaching web fundamentals and UI design.",
+    "offered": [
+      "Intro to React",
+      "HTML & CSS Basics"
+    ],
+    "wanted": [
+      "Photoshop Basics"
+    ]
+  }
+}

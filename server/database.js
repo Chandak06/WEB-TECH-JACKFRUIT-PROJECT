@@ -1,7 +1,7 @@
-
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
+
 const uri = process.env.SERVERLINK;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -20,9 +20,12 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (err) {
+    console.error("Connection error:", err);
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
 }
-run().catch(console.dir);
+
+run();
