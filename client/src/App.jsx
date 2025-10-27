@@ -1,8 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./Pages/HomePage.jsx";
-import Login from "./Pages/LoginPage.jsx";
-import Signup from "./Pages/SignupPage.jsx";
+import LoginPage from "./Pages/LoginPage.jsx";
+import SignupPage from "./Pages/SignupPage.jsx";
 import DashBoardPage from "./Pages/DashBoardPage.jsx";
 import SkillsPage from "./Pages/SkillsPage.jsx";
 import OfferSkillPage from "./Pages/OfferSkillPage.jsx";
@@ -15,8 +15,8 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/skills" element={<SkillsPage />} />
       <Route path="/skill/:id" element={<SkillsDetailsPage />} />
       <Route
