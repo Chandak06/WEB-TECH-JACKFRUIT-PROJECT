@@ -3,29 +3,53 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const uri = process.env.SERVERLINK;
+const DB_NAME = process.env.DB_NAME || 'skillswap';
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+let client = null;
+let db = null;
 
-async function run() {
+// Connect to MongoDB
+export async function connectDB() {
+  if (db) return db; // return existing connection
   try {
-    // Connect the client to the server	(optional starting in v4.7)
+    if (!uri) {
+      console.warn('SERVERLINK not set. MongoDB will not be available.');
+      return null;
+    }
+    client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    db = client.db(DB_NAME);
+    console.log(`✅ Connected to MongoDB database: ${DB_NAME}`);
+    return db;
   } catch (err) {
-    console.error("Connection error:", err);
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    console.error('❌ MongoDB connection error:', err);
+    return null;
   }
 }
 
-run();
+// Get database instance
+export function getDB() {
+  if (!db) throw new Error('Database not connected. Call connectDB() first.');
+  return db;
+}
+
+// Get a collection
+export function getCollection(name) {
+  return getDB().collection(name);
+}
+
+// Close connection (for cleanup)
+export async function closeDB() {
+  if (client) {
+    await client.close();
+    client = null;
+    db = null;
+    console.log('MongoDB connection closed.');
+  }
+}

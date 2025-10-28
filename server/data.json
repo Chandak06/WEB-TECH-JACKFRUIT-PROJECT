@@ -62,6 +62,7 @@
       "id": 1698350400000,
       "skill": "Intro to React",
       "from": "Sam P",
+      "to": "Alex J",
       "message": "Can we do this tomorrow evening?",
       "date": "2025-10-20",
       "status": "pending"
@@ -79,5 +80,7 @@
     "wanted": [
       "Photoshop Basics"
     ]
-  }
+  },
+  "users": [],
+  "messages": []
 }
