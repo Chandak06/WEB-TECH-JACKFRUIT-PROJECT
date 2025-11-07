@@ -11,17 +11,31 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // demo login: no backend. Create a small user object and persist via AuthContext
-    let name = email.split('@')[0] || 'User'
-    try {
-      if (profile && profile.email === email) name = profile.name || name
-  } catch (err) { console.warn(err) }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    login({ name, email })
-    navigate('/')
+  try {
+    const response = await fetch('http://localhost:5000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || 'Login failed');
+      return;
+    }
+
+    // Successful login
+    login({ name: data.user.name, email: data.user.email });
+    navigate('/');
+  } catch (err) {
+    console.error('Login error:', err);
+    alert('Something went wrong. Try again!');
   }
+};
 
   return (
     <div className='login-box'>

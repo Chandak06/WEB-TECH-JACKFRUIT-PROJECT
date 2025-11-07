@@ -12,7 +12,7 @@ const Signup = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
- const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const prof = {
@@ -26,24 +26,29 @@ const Signup = () => {
   };
 
   try {
-    // send profile data to backend API
     const response = await fetch('http://localhost:5000/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(prof),
     });
 
-    if (!response.ok) throw new Error('Failed to register user');
-
     const data = await response.json();
-    console.log('User created:', data);
 
+    if (!response.ok) {
+      // Show alert if user already exists or registration failed
+      alert(data.message || 'Failed to register user');
+      return;
+    }
+
+    // Successful registration
+    alert('User registered successfully!');
     login({ name: prof.name, email });
     navigate('/');
   } catch (err) {
-    console.error(err);
+    alert('An error occurred while registering. Please try again.');
   }
 };
+
 
 
   return (

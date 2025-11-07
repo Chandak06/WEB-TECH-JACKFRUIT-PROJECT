@@ -8,15 +8,17 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // to parse JSON bodies
+app.use(express.json());
 
-// Replace with your own MongoDB connection string
-const uri = process.env.SERVERLINK; // connects to the server from here
+const uri = process.env.SERVERLINK;
 const client = new MongoClient(uri);
+
+let db;
 
 async function connectDB() {
   try {
     await client.connect();
+    db = client.db('userDatabase');
     console.log('Connected to MongoDB!');
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
@@ -25,11 +27,11 @@ async function connectDB() {
 
 connectDB();
 
-app.post('/api/signup', async (req, res) => { // from the sign-up page we come here
+// Use the same db connection for all requests
+app.post('/api/signup', async (req, res) => {
   const { name, email, password, location, bio, offered, wanted } = req.body;
 
   try {
-    const db = client.db('userDatabase'); // creates a database if it doesn't exist
     const users = db.collection('users');
 
     const existingUser = await users.findOne({ email });
@@ -37,12 +39,12 @@ app.post('/api/signup', async (req, res) => { // from the sign-up page we come h
       return res.status(400).json({ message: 'User already exists!' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); // safety is key
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
       name,
       email,
-      hashedPassword, 
+      password: hashedPassword,
       location,
       bio,
       offered,
@@ -52,9 +54,43 @@ app.post('/api/signup', async (req, res) => { // from the sign-up page we come h
     await users.insertOne(newUser);
     res.status(201).json({ message: 'User registered successfully!' });
   } catch (err) {
-    console.error(err);
+    console.error('Signup error:', err);
     res.status(500).json({ message: 'Server error' });
   }
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const db = client.db('userDatabase');
+    const users = db.collection('users');
+
+    const user = await users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not registered!' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Incorrect password!' });
+    }
+
+    res.status(200).json({
+      message: 'Login successful!',
+      user: { name: user.name, email: user.email },
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+process.on('SIGINT', async () => {
+  await client.close();
+  console.log('MongoDB connection closed.');
+  process.exit(0);
 });
 
 app.listen(5000, () => console.log('Server running on http://localhost:5000'));
