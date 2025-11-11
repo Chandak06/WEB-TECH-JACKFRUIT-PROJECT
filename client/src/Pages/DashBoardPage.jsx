@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useData } from "../context/DataContext.jsx";
 import "../styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const mockUser = {
   name: "Alex Johnson",
@@ -14,6 +15,7 @@ const mockUser = {
 const DashBoardPage = () => {
   const { user } = useAuth();
   const { skills, requests, profile } = useData();
+  const navigate = useNavigate();
   const displayUser = {
     ...mockUser,
     name: user?.name ?? profile?.name ?? mockUser.name,
@@ -63,7 +65,7 @@ const DashBoardPage = () => {
           <div className="section">
             <div className="section-head">
               <h2>Offered Skills</h2>
-              <button className="btn-primary small">Add</button>
+              <button className="btn-primary small" onClick={() => navigate("/offer-skill")}>Add</button>
             </div>
 
             <div className="list">

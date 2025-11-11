@@ -13,31 +13,47 @@ const OfferSkillPage = () => {
   const { addOffer, profile } = useData();
   const { user } = useAuth();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Simple client-side validation
-    if (!title.trim() || !desc.trim()) {
-      alert("Please provide a title and description for the skill.");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!title.trim() || !desc.trim()) {
+    alert("Please provide a title and description for the skill.");
+    return;
+  }
+
+  const payload = {
+    title,
+    level,
+    tags: tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean),
+    desc,
+    provider: profile?.name || (user && user.name) || "Anonymous",
+  };
+
+  try {
+    const response = await fetch("http://localhost:5000/api/skills", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || "Failed to add skill.");
       return;
     }
 
-    // Build payload and persist via DataContext
-    const payload = {
-      title,
-      level,
-      tags: tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean),
-      desc,
-      provider: profile?.name || (user && user.name) || "Anonymous",
-    };
-    addOffer(payload);
-
-    // Confirmation then redirect to dashboard
-    alert("Skill offer created (mock). Redirecting to dashboard...");
+    alert("Skill added successfully!");
     navigate("/dashboard");
-  };
+  } catch (error) {
+    console.error("Error submitting skill:", error);
+    alert("An error occurred while adding your skill.");
+  }
+};
+
 
   return (
     <div className="offer-root">

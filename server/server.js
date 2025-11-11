@@ -134,6 +134,30 @@ app.get('/api/profile/:email', async (req, res) => {
   }
 });
 
+app.post('/api/skills', async (req, res) => {
+  const { title, level, tags, desc, provider } = req.body;
+
+  try {
+    const db = client.db('userDatabase');
+    const skills = db.collection('skills');
+
+    const newSkill = {
+      title,
+      level,
+      tags,
+      desc,
+      provider,
+      createdAt: new Date(),
+    };
+
+    await skills.insertOne(newSkill);
+    res.status(201).json({ message: 'Skill added successfully!' });
+  } catch (err) {
+    console.error('Error adding skill:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed.');
