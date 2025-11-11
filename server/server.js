@@ -86,6 +86,53 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.put('/api/profile/:email', async (req, res) => {
+  const { email } = req.params;
+  const { name, location, bio, offered, wanted } = req.body;
+
+  try {
+    const db = client.db('userDatabase');
+    const users = db.collection('users');
+
+    // Find and update user profile
+    const result = await users.updateOne(
+      { email },
+      { $set: { name, location, bio, offered, wanted } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/profile/:email', async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const db = client.db('userDatabase');
+    const users = db.collection('users');
+
+    const user = await users.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Hide password hash before sending to frontend
+    const { hashedPassword, ...userData } = user;
+
+    res.status(200).json(userData);
+  } catch (err) {
+    console.error('Error fetching profile:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 process.on('SIGINT', async () => {
   await client.close();

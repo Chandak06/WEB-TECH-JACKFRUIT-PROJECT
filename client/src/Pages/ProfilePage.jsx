@@ -15,16 +15,57 @@ const ProfilePage = () => {
     setProfile(ctxProfile);
   }, [ctxProfile]);
 
-  const save = (next) => {
-    const toSave = typeof next === "function" ? next(profile) : next || profile;
-    setProfile(toSave);
+useEffect(() => {
+  const fetchProfile = async () => {
     try {
-      updateProfile(toSave);
+      const response = await fetch(`http://localhost:5000/api/profile/${ctxProfile.email}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.warn(data.message || 'Failed to load profile');
+        return;
+      }
+
+      setProfile(data);
     } catch (e) {
-      console.warn(e);
+      console.warn('Error fetching profile:', e);
     }
-    setEditing(false);
   };
+
+  if (ctxProfile?.email) {
+    fetchProfile();
+  }
+}, [ctxProfile]);
+
+
+const save = async (next) => {
+  const toSave = typeof next === "function" ? next(profile) : next || profile;
+  setProfile(toSave);
+
+  try {
+    // Send updated profile data to backend
+    const response = await fetch(`http://localhost:5000/api/profile/${toSave.email}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(toSave),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message || "Failed to update profile");
+      return;
+    }
+
+    alert("Profile updated successfully!");
+  } catch (e) {
+    console.warn("Error saving profile:", e);
+    alert("An error occurred while saving your profile.");
+  }
+
+  setEditing(false);
+};
+
 
   const reset = () => {
     resetProfile();
