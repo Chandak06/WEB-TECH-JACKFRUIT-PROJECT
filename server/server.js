@@ -158,6 +158,19 @@ app.post('/api/skills', async (req, res) => {
   }
 });
 
+app.get('/api/skills', async (req, res) => {
+  try {
+    const db = client.db('userDatabase');
+    const skills = db.collection('skills');
+
+    const allSkills = await skills.find({}).toArray();
+    res.status(200).json(allSkills);
+  } catch (err) {
+    console.error('Error fetching skills:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed.');

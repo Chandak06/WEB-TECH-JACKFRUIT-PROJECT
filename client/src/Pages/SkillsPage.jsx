@@ -1,26 +1,50 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/SkillsPage.css";
-import { useData } from "../context/DataContext.jsx";
 
 const SkillsPage = () => {
-  const { skills } = useData();
+  const [skills, setSkills] = useState([]);
   const [q, setQ] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/skills");
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.warn(data.message || "Failed to fetch skills");
+          return;
+        }
+
+        const formatted = data.map((s) => ({
+          ...s,
+          id: s._id,
+        }));
+
+        setSkills(formatted);
+      } catch (err) {
+        console.warn("Error loading skills:", err);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
   const tags = useMemo(() => {
     const s = new Set();
-    (skills || []).forEach((k) => k.tags.forEach((t) => s.add(t)));
+    skills.forEach((k) => (k.tags || []).forEach((t) => s.add(t)));
     return Array.from(s);
   }, [skills]);
 
-  const filtered = (skills || []).filter((s) => {
+  const filtered = skills.filter((s) => {
     const matchesQ =
       q.trim() === "" ||
       (s.title + " " + s.desc + " " + s.provider)
         .toLowerCase()
         .includes(q.toLowerCase());
-    const matchesTag = tagFilter === "" || s.tags.includes(tagFilter);
+    const matchesTag = tagFilter === "" || (s.tags || []).includes(tagFilter);
     return matchesQ && matchesTag;
   });
 
@@ -72,7 +96,7 @@ const SkillsPage = () => {
             <div className="skill-meta">
               <span className="provider">By {s.provider}</span>
               <div className="skill-tags">
-                {s.tags.map((t) => (
+                {(s.tags || []).map((t) => (
                   <span key={t} className="pill">
                     {t}
                   </span>
