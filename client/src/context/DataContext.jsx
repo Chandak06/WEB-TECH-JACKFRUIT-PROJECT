@@ -27,9 +27,7 @@ export const DataProvider = ({ children }) => {
           : null;
 
         if (email) {
-          const profileRes = await fetch(
-            `http://localhost:5000/api/profile?email=${encodeURIComponent(email)}`
-          );
+          const profileRes = await fetch(`http://localhost:5000/api/profile/${encodeURIComponent(email)}`);
           const profileData = await profileRes.json();
           setProfile(profileData);
         }

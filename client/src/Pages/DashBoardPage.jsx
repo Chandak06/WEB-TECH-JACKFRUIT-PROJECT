@@ -89,7 +89,7 @@ const DashBoardPage = () => {
 
           <div className="section">
             <div className="section-head">
-              <h2>Request From Others</h2>
+              <h2>Show Requests</h2>
               <button className="btn-primary small" onClick={() => navigate("/request-skill")}>Request</button>
             </div>
 

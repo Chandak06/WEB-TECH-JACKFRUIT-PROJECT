@@ -196,6 +196,39 @@ app.post('/api/requests', async (req, res) => {
   }
 });
 
+app.get('/api/requests', async (req, res) => {
+  const { to } = req.query;
+  try {
+    const db = client.db('userDatabase');
+    const requests = db.collection('requests');
+    const data = await requests.find(to ? { to } : {}).toArray();
+    res.json(data);
+  } catch (err) {
+    console.error('Error fetching requests:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+import { ObjectId } from 'mongodb';
+
+app.put('/api/requests/:id', async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const db = client.db('userDatabase');
+    const requests = db.collection('requests');
+    await requests.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { status } }
+    );
+    res.json({ message: 'Status updated successfully' });
+  } catch (err) {
+    console.error('Error updating request:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed.');

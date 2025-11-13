@@ -1,16 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/RequestPage.css";
 import { useNavigate } from "react-router-dom";
-import { useData } from "../context/DataContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx"; // ✅ to get current user
 
 const RequestPage = () => {
-  const { requests, updateRequestStatus } = useData();
   const navigate = useNavigate();
+  const { user } = useAuth(); // ✅ get logged-in user
+  const [requests, setRequests] = useState([]);
 
-  const handleAction = (id, action) => {
-    // Update via DataContext
-    updateRequestStatus(id, action);
-    alert(`Request ${action}`);
+  // 🧠 Fetch only requests where "to" = current user's name
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (!user?.name) return;
+
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/requests?to=${encodeURIComponent(user.name)}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch requests");
+        const data = await res.json();
+        setRequests(data);
+      } catch (err) {
+        console.error("Error loading requests:", err);
+      }
+    };
+
+    fetchRequests();
+  }, [user]);
+
+  // 🧠 Update request status (Accept / Decline)
+  const handleAction = async (id, action) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/requests/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: action }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update request status");
+
+      // Update locally too
+      setRequests((prev) =>
+        prev.map((r) =>
+          r._id === id ? { ...r, status: action } : r
+        )
+      );
+
+      alert(`Request ${action}`);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong while updating the request.");
+    }
   };
 
   return (
@@ -29,7 +69,7 @@ const RequestPage = () => {
         )}
 
         {requests.map((r) => (
-          <div key={r.id} className={`req-card ${r.status}`}>
+          <div key={r._id} className={`req-card ${r.status}`}>
             <div className="req-main">
               <div className="req-info">
                 <h3>{r.skill}</h3>
@@ -46,13 +86,13 @@ const RequestPage = () => {
                 <>
                   <button
                     className="btn-primary"
-                    onClick={() => handleAction(r.id, "accepted")}
+                    onClick={() => handleAction(r._id, "accepted")}
                   >
                     Accept
                   </button>
                   <button
                     className="btn"
-                    onClick={() => handleAction(r.id, "declined")}
+                    onClick={() => handleAction(r._id, "declined")}
                   >
                     Decline
                   </button>
@@ -61,7 +101,7 @@ const RequestPage = () => {
                 <div className={`status ${r.status}`}>{r.status}</div>
               )}
 
-              <button className="btn" onClick={() => navigate("/skill/1")}>
+              <button className="btn" onClick={() => navigate(`/skill/${r.skillId || 1}`)}>
                 View skill
               </button>
             </div>
