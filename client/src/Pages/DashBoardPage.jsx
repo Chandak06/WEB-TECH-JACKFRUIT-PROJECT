@@ -64,7 +64,7 @@ const DashBoardPage = () => {
         <section className="db-main">
           <div className="section">
             <div className="section-head">
-              <h2>Offered Skills</h2>
+              <h2>Offer Skills</h2>
               <button className="btn-primary small" onClick={() => navigate("/offer-skill")}>Add</button>
             </div>
 
@@ -89,8 +89,8 @@ const DashBoardPage = () => {
 
           <div className="section">
             <div className="section-head">
-              <h2>Requested Skills</h2>
-              <button className="btn-primary small">Request</button>
+              <h2>Request From Others</h2>
+              <button className="btn-primary small" onClick={() => navigate("/request-skill")}>Request</button>
             </div>
 
             <div className="list">

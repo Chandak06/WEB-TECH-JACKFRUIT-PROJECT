@@ -1,9 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/SkillsPage.css";
+import { useData } from "../context/DataContext.jsx";
+import { useAuth } from "../context/AuthContext";
 
 const SkillsPage = () => {
-  const [skills, setSkills] = useState([]);
+  const {addRequest, profile } = useData();
+  const [skillList, setSkillList] = useState([]);
+  const { user } = useAuth();
   const [q, setQ] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
@@ -23,7 +27,7 @@ const SkillsPage = () => {
           id: s._id,
         }));
 
-        setSkills(formatted);
+        setSkillList(formatted);
       } catch (err) {
         console.warn("Error loading skills:", err);
       }
@@ -32,13 +36,41 @@ const SkillsPage = () => {
     fetchSkills();
   }, []);
 
+const handleRequest = async (skill) => {
+  const requester = user?.name || profile?.name || "Anonymous";
+  const payload = {
+    skill: skill.title,
+    from: requester,
+    to: skill.provider || "Unknown",
+    message: `Request for ${skill.title}`,
+    date: new Date().toISOString().split("T")[0],
+    status: "pending",
+  };
+
+  try {
+    const res = await fetch("http://localhost:5000/api/requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error("Failed to save request to DB");
+    const saved = await res.json();
+
+    alert(`Request sent for ${skill.title}`);
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong while sending the request.");
+  }
+};
+
   const tags = useMemo(() => {
     const s = new Set();
-    skills.forEach((k) => (k.tags || []).forEach((t) => s.add(t)));
+    skillList.forEach((k) => (k.tags || []).forEach((t) => s.add(t)));
     return Array.from(s);
-  }, [skills]);
+  }, [skillList]);
 
-  const filtered = skills.filter((s) => {
+  const filtered = skillList.filter((s) => {
     const matchesQ =
       q.trim() === "" ||
       (s.title + " " + s.desc + " " + s.provider)
@@ -105,7 +137,7 @@ const SkillsPage = () => {
             </div>
             <p className="desc">{s.desc}</p>
             <div className="skill-actions">
-              <button className="btn">Request</button>
+              <button className="btn" onClick={() => handleRequest(s)}>Request</button>
               <button className="btn-ghost">Message</button>
             </div>
           </article>

@@ -1,171 +1,123 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-const SKILLS_KEY = "skillswap_skills_v1";
-const REQ_KEY = "skillswap_requests_v1";
-const PROFILE_KEY = "skillswap_profile_v1";
-
-const defaultSkills = [
-  {
-    id: 1,
-    title: "Intro to React",
-    level: "Beginner",
-    provider: "Alex J",
-    tags: ["react", "web"],
-    desc: "Learn components, props, and hooks in a 45-min session.",
-  },
-  {
-    id: 2,
-    title: "HTML & CSS Basics",
-    level: "Beginner",
-    provider: "Sam P",
-    tags: ["html", "css", "responsive"],
-    desc: "Semantics, layout, and responsive techniques.",
-  },
-  {
-    id: 3,
-    title: "Figma UI Workshop",
-    level: "Intermediate",
-    provider: "Priya S",
-    tags: ["design", "figma"],
-    desc: "Design fundamentals and simple UI prototyping.",
-  },
-  {
-    id: 4,
-    title: "Photography 101",
-    level: "Beginner",
-    provider: "Ravi K",
-    tags: ["photo", "editing"],
-    desc: "Basics of composition and mobile editing.",
-  },
-  {
-    id: 5,
-    title: "Git & GitHub",
-    level: "Intermediate",
-    provider: "Lina M",
-    tags: ["git", "version-control"],
-    desc: "Commits, branches, and PR workflow.",
-  },
-];
-
-const defaultRequests = [
-  {
-    id: 1,
-    skill: "Intro to React",
-    from: "Sam P",
-    message: "Can we do this tomorrow evening?",
-    date: "2025-10-20",
-    status: "pending",
-  },
-  {
-    id: 2,
-    skill: "Photography 101",
-    from: "Lina M",
-    message: "Would love a 1 hour session.",
-    date: "2025-10-22",
-    status: "pending",
-  },
-  {
-    id: 3,
-    skill: "Git & GitHub",
-    from: "Ravi K",
-    message: "Quick help with PRs?",
-    date: "2025-10-23",
-    status: "pending",
-  },
-];
-
-const defaultProfile = {
-  name: "Alex Johnson",
-  email: "alex.johnson@student.edu",
-  location: "Campus Library",
-  bio: "Computer Science student who loves teaching web fundamentals and UI design.",
-  offered: ["Intro to React", "HTML & CSS Basics"],
-  wanted: ["Photoshop Basics"],
-};
-
 const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
-  const [skills, setSkills] = useState(defaultSkills);
-  const [requests, setRequests] = useState(defaultRequests);
-  const [profile, setProfile] = useState(defaultProfile);
+  const [skills, setSkills] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [profile, setProfile] = useState(null);
 
-  // Load from localStorage if available
+  // Fetch all data from backend
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SKILLS_KEY);
-      if (raw) setSkills(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read skills from storage", e);
-    }
-    try {
-      const raw = localStorage.getItem(REQ_KEY);
-      if (raw) setRequests(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read requests from storage", e);
-    }
-    try {
-      const raw = localStorage.getItem(PROFILE_KEY);
-      if (raw) setProfile(JSON.parse(raw));
-    } catch (e) {
-      console.warn("Failed to read profile from storage", e);
-    }
+    const fetchData = async () => {
+      try {
+        // Fetch skills
+        const skillRes = await fetch("http://localhost:5000/api/skills");
+        const skillData = await skillRes.json();
+        setSkills(skillData);
+
+        // Fetch requests
+        const reqRes = await fetch("http://localhost:5000/api/requests");
+        const reqData = await reqRes.json();
+        setRequests(reqData);
+
+        // Fetch profile (if logged in)
+        const email = localStorage.getItem("skillswap_user_v1")
+          ? JSON.parse(localStorage.getItem("skillswap_user_v1")).email
+          : null;
+
+        if (email) {
+          const profileRes = await fetch(
+            `http://localhost:5000/api/profile?email=${encodeURIComponent(email)}`
+          );
+          const profileData = await profileRes.json();
+          setProfile(profileData);
+        }
+      } catch (err) {
+        console.error("❌ Failed to fetch data from backend:", err);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Persist changes
-  useEffect(() => {
+  // Add new skill (Offer)
+  const addOffer = async (offer) => {
     try {
-      localStorage.setItem(SKILLS_KEY, JSON.stringify(skills));
-    } catch (e) {
-      console.warn("Failed to save skills", e);
-    }
-  }, [skills]);
+      const response = await fetch("http://localhost:5000/api/skills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(offer),
+      });
 
-  useEffect(() => {
+      if (!response.ok) throw new Error("Failed to add offer");
+
+      const newSkill = await response.json();
+      setSkills((prev) => [newSkill, ...prev]);
+      return newSkill;
+    } catch (err) {
+      console.error("❌ Error adding offer:", err);
+    }
+  };
+
+  // Add new request
+  const addRequest = async (req) => {
     try {
-      localStorage.setItem(REQ_KEY, JSON.stringify(requests));
-    } catch (e) {
-      console.warn("Failed to save requests", e);
-    }
-  }, [requests]);
+      const response = await fetch("http://localhost:5000/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req),
+      });
 
-  useEffect(() => {
+      if (!response.ok) throw new Error("Failed to add request");
+
+      const newReq = await response.json();
+      setRequests((prev) => [newReq, ...prev]);
+      return newReq;
+    } catch (err) {
+      console.error("❌ Error adding request:", err);
+    }
+  };
+
+  // Update request status
+  const updateRequestStatus = async (id, status) => {
     try {
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    } catch (e) {
-      console.warn("Failed to save profile", e);
+      const response = await fetch(`http://localhost:5000/api/requests/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update request status");
+
+      setRequests((prev) =>
+        prev.map((r) => (r._id === id ? { ...r, status } : r))
+      );
+    } catch (err) {
+      console.error("❌ Error updating request:", err);
     }
-  }, [profile]);
+  };
 
-  const findSkillById = (id) => skills.find((s) => String(s.id) === String(id));
+  // Update user profile
+  const updateProfile = async (next) => {
+    const updated = typeof next === "function" ? next(profile) : next;
+    setProfile(updated);
 
-  const addOffer = (offer) => {
-    const id = Date.now();
-    const next = { id, ...offer };
-    setSkills((s) => [next, ...s]);
-    // Optionally add to profile.offered if provider matches
-    if (offer.provider && offer.provider === profile.name) {
-      setProfile((p) => ({ ...p, offered: [...p.offered, offer.title] }));
+    try {
+      const response = await fetch("http://localhost:5000/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated),
+      });
+
+      if (!response.ok) throw new Error("Failed to update profile");
+    } catch (err) {
+      console.error("❌ Error updating profile:", err);
     }
-    return next;
   };
 
-  const addRequest = (req) => {
-    const id = Date.now();
-    const next = { id, ...req };
-    setRequests((r) => [next, ...r]);
-    return next;
-  };
-
-  const updateRequestStatus = (id, status) => {
-    setRequests((r) => r.map((x) => (x.id === id ? { ...x, status } : x)));
-  };
-
-  const updateProfile = (next) => {
-    setProfile((p) => (typeof next === "function" ? next(p) : next));
-  };
-
-  const resetProfile = () => setProfile(defaultProfile);
+  const findSkillById = (id) =>
+    skills.find((s) => String(s._id || s.id) === String(id));
 
   return (
     <DataContext.Provider
@@ -178,7 +130,6 @@ export const DataProvider = ({ children }) => {
         addRequest,
         updateRequestStatus,
         updateProfile,
-        resetProfile,
       }}
     >
       {children}

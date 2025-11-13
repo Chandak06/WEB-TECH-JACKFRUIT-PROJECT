@@ -171,6 +171,31 @@ app.get('/api/skills', async (req, res) => {
   }
 });
 
+app.post('/api/requests', async (req, res) => {
+  const { skill, from, to, message, date, status } = req.body;
+
+  try {
+    const db = client.db('userDatabase');
+    const requests = db.collection('requests');
+
+    const newRequest = {
+      skill,
+      from,
+      to,
+      message,
+      date,
+      status,
+      createdAt: new Date(),
+    };
+
+    await requests.insertOne(newRequest);
+    res.status(201).json(newRequest);
+  } catch (err) {
+    console.error('Error adding request:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 process.on('SIGINT', async () => {
   await client.close();
   console.log('MongoDB connection closed.');
