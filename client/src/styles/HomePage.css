@@ -105,6 +105,11 @@ body {
     justify-content: space-between
 }
 
+.nav-greet{
+    margin: auto;
+    font-weight: bold;
+}
+
 .logo {
     font-weight: 700;
     font-size: 18px

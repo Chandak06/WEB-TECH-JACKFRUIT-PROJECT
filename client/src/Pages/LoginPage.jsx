@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useData } from "../context/DataContext.jsx";
 import '../styles/LoginPage.css'
 
 const Login = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const { profile } = useData();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 

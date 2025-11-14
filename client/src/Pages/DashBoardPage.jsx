@@ -4,29 +4,23 @@ import { useData } from "../context/DataContext.jsx";
 import "../styles/Dashboard.css";
 import { useNavigate } from "react-router-dom";
 
-const mockUser = {
-  name: "Alex Johnson",
-  email: "alex.johnson@student.edu",
-  avatar: "",
-  location: "Campus Library",
-  bio: "Computer Science student who loves teaching web fundamentals and UI design.",
-};
 
 const DashBoardPage = () => {
   const { user } = useAuth();
   const { skills, requests, profile } = useData();
   const navigate = useNavigate();
-  const displayUser = {
-    ...mockUser,
-    name: user?.name ?? profile?.name ?? mockUser.name,
-    email: user?.email ?? profile?.email ?? mockUser.email,
+ const displayUser = {
+    name: profile?.name ?? user?.name,
+    email: profile?.email ?? user?.email,
+    location: profile?.location,
+    bio: profile?.bio,
   };
   return (
     <div className="db-root">
       <header className="db-header">
         <h1>Dashboard</h1>
         <p className="db-sub">
-          Welcome back, {mockUser.name.split(" ")[0]} — here are your skills and
+          Welcome back, {displayUser.name.split(" ")[0]} — here are your skills and
           requests.
         </p>
       </header>

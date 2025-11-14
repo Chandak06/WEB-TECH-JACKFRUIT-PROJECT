@@ -1,106 +1,118 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from '../context/AuthContext.jsx'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from "../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 import "../styles/ProfilePage.css";
 import { useData } from "../context/DataContext.jsx";
 
 const ProfilePage = () => {
-  const { profile: ctxProfile, updateProfile, resetProfile } = useData();
-  const [profile, setProfile] = useState(ctxProfile);
+  const { profile: ctxProfile, updateProfile } = useData();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const [profile, setProfile] = useState(null); 
   const [editing, setEditing] = useState(false);
   const [newOffered, setNewOffered] = useState("");
   const [newWanted, setNewWanted] = useState("");
 
+  // Sync local state with context profile
   useEffect(() => {
-    setProfile(ctxProfile);
+    if (ctxProfile) {
+      setProfile(ctxProfile);
+    }
   }, [ctxProfile]);
 
-useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/profile/${ctxProfile.email}`);
-      const data = await response.json();
+  // If profile is not loaded yet → prevent crash
+  if (!profile) {
+    return (
+      <div style={{ padding: 20, textAlign: "center" }}>
+        <h2>Loading profile...</h2>
+      </div>
+    );
+  }
 
-      if (!response.ok) {
-        console.warn(data.message || 'Failed to load profile');
+  // ===========================
+  // SAVE PROFILE
+  // ===========================
+  const save = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/profile/${encodeURIComponent(profile.email)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(profile),
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message || "Failed to update profile");
         return;
       }
 
-      setProfile(data);
-    } catch (e) {
-      console.warn('Error fetching profile:', e);
+      // Update global context
+      updateProfile(profile);
+
+      alert("Profile updated successfully!");
+      setEditing(false);
+    } catch (err) {
+      console.warn("Error saving:", err);
+      alert("Error saving profile");
     }
   };
 
-  if (ctxProfile?.email) {
-    fetchProfile();
-  }
-}, [ctxProfile]);
-
-
-const save = async (next) => {
-  const toSave = typeof next === "function" ? next(profile) : next || profile;
-  setProfile(toSave);
-
-  try {
-    // Send updated profile data to backend
-    const response = await fetch(`http://localhost:5000/api/profile/${toSave.email}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(toSave),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert(data.message || "Failed to update profile");
-      return;
-    }
-
-    alert("Profile updated successfully!");
-  } catch (e) {
-    console.warn("Error saving profile:", e);
-    alert("An error occurred while saving your profile.");
-  }
-
-  setEditing(false);
-};
-
-
+  // ===========================
+  // RESET CHANGES
+  // ===========================
   const reset = () => {
-    resetProfile();
+    setProfile(ctxProfile);
     setEditing(false);
   };
 
+  // ===========================
+  // ADD / REMOVE SKILLS
+  // ===========================
   const addOffered = () => {
     const v = newOffered.trim();
     if (!v) return;
-    const next = { ...profile, offered: [...(profile.offered || []), v] };
-    save(next);
+
+    setProfile({
+      ...profile,
+      offered: [...(profile.offered || []), v],
+    });
+
     setNewOffered("");
   };
 
   const addWanted = () => {
     const v = newWanted.trim();
     if (!v) return;
-    const next = { ...profile, wanted: [...(profile.wanted || []), v] };
-    save(next);
+
+    setProfile({
+      ...profile,
+      wanted: [...(profile.wanted || []), v],
+    });
+
     setNewWanted("");
   };
 
   const removeOffered = (i) => {
-    const arr = (profile.offered || []).filter((_, idx) => idx !== i);
-    save({ ...profile, offered: arr });
+    setProfile({
+      ...profile,
+      offered: profile.offered.filter((_, idx) => idx !== i),
+    });
   };
 
   const removeWanted = (i) => {
-    const arr = (profile.wanted || []).filter((_, idx) => idx !== i);
-    save({ ...profile, wanted: arr });
+    setProfile({
+      ...profile,
+      wanted: profile.wanted.filter((_, idx) => idx !== i),
+    });
   };
 
-  const { logout } = useAuth()
-  const navigate = useNavigate()
-
+  // ================================================================
+  // UI STARTS HERE — COMPLETELY SAFE
+  // ================================================================
   return (
     <div className="pf-root">
       <div className="pf-card">
@@ -108,25 +120,31 @@ const save = async (next) => {
           <div>
             <h1>{profile.name}</h1>
             <p className="muted">
-              {profile.email} · {profile.location}
+              {profile.email} · {profile.location || "No location"}
             </p>
           </div>
+
           <div className="pf-controls">
             {editing ? (
               <>
-                <button className="btn" onClick={() => setEditing(false)}>
-                  Cancel
-                </button>
-                <button className="btn-primary" onClick={() => save(profile)}>
-                  Save profile
-                </button>
+                <button className="btn" onClick={reset}>Cancel</button>
+                <button className="btn-primary" onClick={save}>Save Profile</button>
               </>
             ) : (
               <button className="btn-primary" onClick={() => setEditing(true)}>
-                Edit profile
+                Edit Profile
               </button>
             )}
-            <button className="btn" onClick={() => { logout(); navigate('/')}}>Log out</button>
+
+            <button
+              className="btn"
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+            >
+              Log out
+            </button>
           </div>
         </header>
 
@@ -135,7 +153,7 @@ const save = async (next) => {
             <label>
               Display name
               <input
-                value={profile.name}
+                value={profile.name || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, name: e.target.value })
                 }
@@ -146,7 +164,7 @@ const save = async (next) => {
             <label>
               Email
               <input
-                value={profile.email}
+                value={profile.email || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, email: e.target.value })
                 }
@@ -157,7 +175,7 @@ const save = async (next) => {
             <label>
               Location
               <input
-                value={profile.location}
+                value={profile.location || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, location: e.target.value })
                 }
@@ -168,7 +186,7 @@ const save = async (next) => {
             <label>
               Bio
               <textarea
-                value={profile.bio}
+                value={profile.bio || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, bio: e.target.value })
                 }
@@ -184,11 +202,12 @@ const save = async (next) => {
             </div>
           </div>
 
+          {/* SKILLS SECTION */}
           <aside className="pf-right">
             <div className="panel">
               <h3>Offered skills</h3>
               <ul className="skill-list">
-                {profile.offered.map((s, i) => (
+                {profile.offered?.map((s, i) => (
                   <li key={i} className="skill-item">
                     <span>{s}</span>
                     {editing && (
@@ -220,7 +239,7 @@ const save = async (next) => {
             <div className="panel">
               <h3>Wanted skills</h3>
               <ul className="skill-list">
-                {profile.wanted.map((s, i) => (
+                {profile.wanted?.map((s, i) => (
                   <li key={i} className="skill-item">
                     <span>{s}</span>
                     {editing && (

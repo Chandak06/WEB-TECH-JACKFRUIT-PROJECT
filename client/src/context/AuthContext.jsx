@@ -5,15 +5,21 @@ const KEY = "skillswap_user_v1";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);  // 🔥 THE MISSING PIECE
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) setUser(JSON.parse(raw));
+      if (raw) {
+        setUser(JSON.parse(raw));
+      }
     } catch (err) {
       console.warn("Failed to read auth", err);
     }
+
+    setLoading(false);  // 🔥 CRITICAL — do NOT redirect until done
   }, []);
 
   const login = (u) => {
@@ -36,7 +42,13 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated: !!user }}
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        loading,       // 🔥 expose loading
+      }}
     >
       {children}
     </AuthContext.Provider>

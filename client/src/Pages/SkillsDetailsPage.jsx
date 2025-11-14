@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/SkillsDetailsPage.css";
 import { useData } from "../context/DataContext.jsx";
@@ -6,8 +6,13 @@ import { useData } from "../context/DataContext.jsx";
 const SkillsDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { findSkillById, addRequest, profile } = useData();
-  const skill = findSkillById(id);
+  const { profile, skills } = useData();
+  const [skill, setSkill] = useState(null);
+
+  useEffect(() => {
+    const foundSkill = skills.find(s => s._id === id || s.id === id);
+    setSkill(foundSkill);
+  }, [id, skills]);
 
   if (!skill) {
     return (
@@ -25,17 +30,32 @@ const SkillsDetailsPage = () => {
     );
   }
 
-  const handleRequest = () => {
-    // Create a demo request and persist via DataContext
-    addRequest({
+  const handleRequest = async () => {
+    const payload = {
       skill: skill.title,
       from: profile?.name ?? "Anonymous",
+      to: skill.provider || "Unknown",
       message: "Request via app",
       date: new Date().toISOString().split("T")[0],
       status: "pending",
-    });
-    alert(`Request sent to ${skill.provider} (mock).`);
-    navigate("/dashboard");
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to save request");
+      await res.json();
+
+      alert(`Request sent to ${skill.provider}`);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong while sending the request.");
+    }
   };
 
   return (

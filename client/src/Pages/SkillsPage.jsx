@@ -5,7 +5,7 @@ import { useData } from "../context/DataContext.jsx";
 import { useAuth } from "../context/AuthContext";
 
 const SkillsPage = () => {
-  const {addRequest, profile } = useData();
+  const { profile } = useData();
   const [skillList, setSkillList] = useState([]);
   const { user } = useAuth();
   const [q, setQ] = useState("");
@@ -55,7 +55,7 @@ const handleRequest = async (skill) => {
     });
 
     if (!res.ok) throw new Error("Failed to save request to DB");
-    const saved = await res.json();
+    await res.json();
 
     alert(`Request sent for ${skill.title}`);
   } catch (err) {

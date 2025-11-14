@@ -10,7 +10,7 @@ const OfferSkillPage = () => {
   const [level, setLevel] = useState("Beginner");
   const [tags, setTags] = useState("");
   const [desc, setDesc] = useState("");
-  const { addOffer, profile } = useData();
+  const { profile } = useData();
   const { user } = useAuth();
 
 const handleSubmit = async (e) => {

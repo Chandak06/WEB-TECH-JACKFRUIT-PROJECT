@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useData } from "../context/DataContext.jsx";
 import '../styles/SignupPage.css'
 
 const Signup = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const { updateProfile } = useData();
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -45,7 +43,7 @@ const handleSubmit = async (e) => {
     login({ name: prof.name, email });
     navigate('/');
   } catch (err) {
-    alert('An error occurred while registering. Please try again.');
+    alert('An error occurred while registering. Please try again.',err);
   }
 };
 
