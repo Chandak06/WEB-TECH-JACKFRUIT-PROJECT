@@ -64,7 +64,6 @@ app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const db = client.db('userDatabase');
     const users = db.collection('users');
 
     const user = await users.findOne({ email });
@@ -92,7 +91,6 @@ app.put('/api/profile/:email', async (req, res) => {
   const { name, location, bio, offered, wanted } = req.body;
 
   try {
-    const db = client.db('userDatabase');
     const users = db.collection('users');
 
     // Find and update user profile
@@ -116,7 +114,6 @@ app.get('/api/profile/:email', async (req, res) => {
   const { email } = req.params;
 
   try {
-    const db = client.db('userDatabase');
     const users = db.collection('users');
 
     const user = await users.findOne({ email });
@@ -139,7 +136,6 @@ app.post('/api/skills', async (req, res) => {
   const { title, level, tags, desc, provider } = req.body;
 
   try {
-    const db = client.db('userDatabase');
     const skills = db.collection('skills');
 
     const newSkill = {
@@ -161,7 +157,6 @@ app.post('/api/skills', async (req, res) => {
 
 app.get('/api/skills', async (req, res) => {
   try {
-    const db = client.db('userDatabase');
     const skills = db.collection('skills');
 
     const allSkills = await skills.find({}).toArray();
@@ -172,11 +167,64 @@ app.get('/api/skills', async (req, res) => {
   }
 });
 
+app.put('/api/skills/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, level, tags, desc } = req.body;
+
+  try {
+    const skills = db.collection('skills');
+    const result = await skills.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { title, level, tags, desc, updatedAt: new Date() } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    res.status(200).json({ message: 'Skill updated successfully' });
+  } catch (err) {
+    console.error('Error updating skill:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/skills/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const skills = db.collection('skills');
+    const result = await skills.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    res.status(200).json({ message: 'Skill deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting skill:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = db.collection('users');
+
+    const allUsers = await users.find({}).toArray();
+    // Remove password hashes before sending
+    const sanitizedUsers = allUsers.map(({ password, ...user }) => user);
+    res.status(200).json(sanitizedUsers);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 app.post('/api/requests', async (req, res) => {
   const { skill, from, to, message, date, status } = req.body;
 
   try {
-    const db = client.db('userDatabase');
     const requests = db.collection('requests');
 
     const newRequest = {
@@ -200,7 +248,6 @@ app.post('/api/requests', async (req, res) => {
 app.get('/api/requests', async (req, res) => {
   const { to } = req.query;
   try {
-    const db = client.db('userDatabase');
     const requests = db.collection('requests');
     const data = await requests.find(to ? { to } : {}).toArray();
     res.json(data);
@@ -217,7 +264,6 @@ app.put('/api/requests/:id', async (req, res) => {
   const { status } = req.body;
 
   try {
-    const db = client.db('userDatabase');
     const requests = db.collection('requests');
     await requests.updateOne(
       { _id: new ObjectId(id) },
@@ -226,6 +272,24 @@ app.put('/api/requests/:id', async (req, res) => {
     res.json({ message: 'Status updated successfully' });
   } catch (err) {
     console.error('Error updating request:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/requests/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const requests = db.collection('requests');
+    const result = await requests.deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    res.status(200).json({ message: 'Request cancelled successfully' });
+  } catch (err) {
+    console.error('Error deleting request:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

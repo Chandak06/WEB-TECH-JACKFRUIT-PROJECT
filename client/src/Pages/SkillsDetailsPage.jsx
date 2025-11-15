@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'
 import "../styles/SkillsDetailsPage.css";
 import { useData } from "../context/DataContext.jsx";
 
@@ -50,11 +51,11 @@ const SkillsDetailsPage = () => {
       if (!res.ok) throw new Error("Failed to save request");
       await res.json();
 
-      alert(`Request sent to ${skill.provider}`);
+      toast.success(`Request sent to ${skill.provider}`);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("Something went wrong while sending the request.");
+      toast.error("Something went wrong while sending the request.");
     }
   };
 

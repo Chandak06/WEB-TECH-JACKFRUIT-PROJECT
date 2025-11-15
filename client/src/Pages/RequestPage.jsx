@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from 'react-toastify'
 import "../styles/RequestPage.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx"; // ✅ to get current user
@@ -46,10 +47,10 @@ const RequestPage = () => {
         )
       );
 
-      alert(`Request ${action}`);
+      toast.success(`Request ${action}`);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong while updating the request.");
+      toast.error("Something went wrong while updating the request.");
     }
   };
 

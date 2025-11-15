@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { toast } from 'react-toastify'
 import '../styles/SignupPage.css'
 
 const Signup = () => {
@@ -33,17 +34,17 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      // Show alert if user already exists or registration failed
-      alert(data.message || 'Failed to register user');
+      // Show toast if user already exists or registration failed
+      toast.error(data.message || 'Failed to register user');
       return;
     }
 
     // Successful registration
-    alert('User registered successfully!');
+    toast.success('User registered successfully! Welcome to SkillSwap!');
     login({ name: prof.name, email });
     navigate('/');
   } catch (err) {
-    alert('An error occurred while registering. Please try again.',err);
+    toast.error('An error occurred while registering. Please try again.');
   }
 };
 

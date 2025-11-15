@@ -7,10 +7,15 @@ export const DataProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
   const { user } = useAuth(); // Get user from AuthContext instead of managing separately
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [skills, setSkills] = useState([]);
   const [requests, setRequests] = useState([]);
   const [profile, setProfile] = useState(null);
+
+  const refreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +43,7 @@ export const DataProvider = ({ children }) => {
     };
 
     fetchData();
-  }, [user]);
+  }, [user, refreshKey]);
 
   const updateProfile = async (updated) => {
     if (!user?.email) return;
@@ -65,6 +70,7 @@ export const DataProvider = ({ children }) => {
         requests,
         profile,
         updateProfile,
+        refreshData,
       }}
     >
       {children}

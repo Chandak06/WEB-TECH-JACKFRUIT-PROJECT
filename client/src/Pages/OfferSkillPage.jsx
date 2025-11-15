@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'
 import "../styles/OfferSkillPage.css";
 import { useData } from "../context/DataContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -17,7 +18,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   if (!title.trim() || !desc.trim()) {
-    alert("Please provide a title and description for the skill.");
+    toast.warning("Please provide a title and description for the skill.");
     return;
   }
 
@@ -42,15 +43,15 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message || "Failed to add skill.");
+      toast.error(data.message || "Failed to add skill.");
       return;
     }
 
-    alert("Skill added successfully!");
+    toast.success("Skill added successfully!");
     navigate("/dashboard");
   } catch (error) {
     console.error("Error submitting skill:", error);
-    alert("An error occurred while adding your skill.");
+    toast.error("An error occurred while adding your skill.");
   }
 };
 

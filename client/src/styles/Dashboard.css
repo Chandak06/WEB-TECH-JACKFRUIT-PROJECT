@@ -22,7 +22,7 @@ body {
 }
 
 .db-root {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 40px auto;
   padding: 24px;
 }
@@ -42,8 +42,8 @@ body {
 /* ========== GRID ========== */
 .db-grid {
   display: grid;
-  grid-template-columns: 260px 1fr 260px;
-  gap: 24px;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 28px;
   margin-top: 24px;
 }
 
@@ -156,12 +156,13 @@ body {
 .skill-card {
   background: var(--card);
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 18px 20px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   transition: var(--transition);
+  min-width: 100%;
 }
 
 .skill-card:hover {
@@ -177,23 +178,33 @@ body {
 
 .skill-head h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
+  flex: 1;
 }
 
 .level {
   background: #eef2ff;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 10px;
   font-size: 12px;
   color: var(--accent-2);
   font-weight: 500;
+  white-space: nowrap;
 }
 
-.skill-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 6px;
+.skill-actions button {
+  flex: 1;
+}
+
+.status-badge {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+  background: #f0f9ff;
+  color: #0369a1;
 }
 
 /* ========== RIGHT PANEL ========== */
@@ -271,4 +282,84 @@ body {
   .db-main {
     order: 2;
   }
+}
+
+/* ========== MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.modal-content textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal-actions button {
+  flex: 1;
 }

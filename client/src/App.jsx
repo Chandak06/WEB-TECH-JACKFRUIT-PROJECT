@@ -9,6 +9,7 @@ import OfferSkillPage from "./Pages/OfferSkillPage.jsx";
 import SkillsDetailsPage from "./Pages/SkillsDetailsPage.jsx";
 import RequestPage from "./Pages/RequestPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
+import PeoplePage from "./Pages/PeoplePage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
       <Route path="/skill/:id" element={<SkillsDetailsPage />} />
       <Route path="/offer-skill" element={<OfferSkillPage />} />
       <Route path="/request-skill" element={<RequestPage />} />
+      <Route path="/people" element={<PeoplePage />} />
       <Route
         path="/offer"
         element={

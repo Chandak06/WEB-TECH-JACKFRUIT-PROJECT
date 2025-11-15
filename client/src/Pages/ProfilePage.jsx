@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from '../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import "../styles/ProfilePage.css";
 import { useData } from "../context/DataContext.jsx";
 

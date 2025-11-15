@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify'
 import "../styles/SkillsPage.css";
 import { useData } from "../context/DataContext.jsx";
 import { useAuth } from "../context/AuthContext";
@@ -57,10 +58,10 @@ const handleRequest = async (skill) => {
     if (!res.ok) throw new Error("Failed to save request to DB");
     await res.json();
 
-    alert(`Request sent for ${skill.title}`);
+    toast.success(`Request sent for ${skill.title}`);
   } catch (err) {
     console.error(err);
-    alert("Something went wrong while sending the request.");
+    toast.error("Something went wrong while sending the request.");
   }
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { toast } from 'react-toastify'
 import '../styles/LoginPage.css'
 
 const Login = () => {
@@ -22,16 +23,17 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message || 'Login failed');
+      toast.error(data.message || 'Login failed');
       return;
     }
 
     // Successful login
+    toast.success('Login successful! Welcome back!');
     login({ name: data.user.name, email: data.user.email });
     navigate('/');
   } catch (err) {
     console.error('Login error:', err);
-    alert('Something went wrong. Try again!');
+    toast.error('Something went wrong. Try again!');
   }
 };
 
