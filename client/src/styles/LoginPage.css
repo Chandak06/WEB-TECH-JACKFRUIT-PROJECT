@@ -1,0 +1,123 @@
+:root {
+    --bg: #f7fafc;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --accent-2: #7c3aed;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg);
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    width: 100%;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);    
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(12, 18, 31, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-container h2 {
+    font-size: 20px;
+}
+
+.login-container p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+.login-container input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e6eefb;
+    background: linear-gradient(180deg, #fff, #fbfdff);
+    outline: none;
+    font-size: 14px;
+}
+
+.login-container input:focus {
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.08);
+    border-color: var(--accent);
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.form-actions .btn {
+    padding: 9px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border: none;
+    padding :10px 20px;
+    font-weight: bold;
+    border-radius :10px;
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid #e6eefb;
+    color: var(--muted);
+}
+
+.small-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+@media (max-width:480px) {
+    .login-container {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .login-box {
+        padding: 16px;
+    }
+}
+.small-note a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+.small-note a:hover {
+    text-decoration: underline;
+}
