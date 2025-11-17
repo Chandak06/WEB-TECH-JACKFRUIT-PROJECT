@@ -4,6 +4,7 @@ import { useData } from "../context/DataContext.jsx";
 import { toast } from 'react-toastify';
 import "../styles/Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton.jsx";
 
 
 const DashBoardPage = () => {
@@ -153,6 +154,7 @@ const DashBoardPage = () => {
 
   return (
     <div className="db-root">
+      <BackButton />
       <header className="db-header">
         <h1>Dashboard</h1>
         <p className="db-sub">

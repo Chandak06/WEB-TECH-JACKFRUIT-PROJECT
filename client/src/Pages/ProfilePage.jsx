@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import "../styles/ProfilePage.css";
 import { useData } from "../context/DataContext.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 const ProfilePage = () => {
   const { profile: ctxProfile, updateProfile } = useData();
@@ -116,6 +117,7 @@ const ProfilePage = () => {
   // ================================================================
   return (
     <div className="pf-root">
+      <BackButton />
       <div className="pf-card">
         <header className="pf-header">
           <div>

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import "../styles/OfferSkillPage.css";
 import { useData } from "../context/DataContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 const OfferSkillPage = () => {
   const navigate = useNavigate();
@@ -57,7 +58,8 @@ const handleSubmit = async (e) => {
 
 
   return (
-    <div className="offer-root">
+    <div>
+      <BackButton />
       <div className="offer-card">
         <h2>Offer a Skill</h2>
         <p className="muted">

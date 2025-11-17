@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { toast } from 'react-toastify'
 import '../styles/SignupPage.css'
+import BackButton from "../components/BackButton.jsx";
 
 const Signup = () => {
   const navigate = useNavigate()
@@ -51,20 +52,23 @@ const handleSubmit = async (e) => {
 
 
   return (
-    <div className='login-box'>
-      <div className='login-container'>
-        <h2>Sign up</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input required placeholder="Full name" value={name} onChange={e=>setName(e.target.value)} />
-          <input required placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} />
-          <input required placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+    <div>
+      <BackButton />
+      <div className='login-box'>
+        <div className='login-container'>
+          <h2>Sign up</h2>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <input required placeholder="Full name" value={name} onChange={e=>setName(e.target.value)} />
+            <input required placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} />
+            <input required placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary">Create account</button>
-          </div>
-        </form>
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">Create account</button>
+            </div>
+          </form>
 
-        <p className="small-note">Already have an account? <Link to="/login">Log in</Link></p>
+          <p className="small-note">Already have an account? <Link to="/login">Log in</Link></p>
+        </div>
       </div>
     </div>
   )

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import "../styles/SkillsPage.css";
 import { useData } from "../context/DataContext.jsx";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/BackButton.jsx";
 
 const SkillsPage = () => {
   const { profile } = useData();
@@ -82,7 +83,8 @@ const handleRequest = async (skill) => {
   });
 
   return (
-    <div className="skills-root">
+    <div>
+      <BackButton />
       <header className="skills-header">
         <h1>Available Skills</h1>
         <p className="muted">

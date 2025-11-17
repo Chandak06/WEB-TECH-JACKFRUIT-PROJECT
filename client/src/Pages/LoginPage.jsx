@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { toast } from 'react-toastify'
 import '../styles/LoginPage.css'
+import BackButton from "../components/BackButton.jsx";
 
 const Login = () => {
   const navigate = useNavigate()
@@ -38,19 +39,22 @@ const handleSubmit = async (e) => {
 };
 
   return (
-    <div className='login-box'>
-      <div className='login-container'>
-        <h2>Log in</h2>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input required placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} />
-          <input required placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
+    <div>
+      <BackButton />
+      <div className='login-box'>
+        <div className='login-container'>
+          <h2>Log in</h2>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <input required placeholder="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)} />
+            <input required placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary">Log in</button>
-          </div>
-        </form>
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">Log in</button>
+            </div>
+          </form>
 
-        <p className="small-note">Don't have an account? <Link to="/signup">Sign up</Link></p>
+          <p className="small-note">Don't have an account? <Link to="/signup">Sign up</Link></p>
+        </div>
       </div>
     </div>
   )

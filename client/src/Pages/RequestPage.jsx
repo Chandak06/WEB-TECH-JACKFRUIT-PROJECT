@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import "../styles/RequestPage.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx"; // ✅ to get current user
+import BackButton from "../components/BackButton.jsx";
 
 const RequestPage = () => {
   const navigate = useNavigate();
@@ -55,7 +56,8 @@ const RequestPage = () => {
   };
 
   return (
-    <div className="req-root">
+    <div>
+      <BackButton />
       <header className="req-head">
         <h1>Swap Requests</h1>
         <p className="muted">

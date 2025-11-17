@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
 import "../styles/SkillsDetailsPage.css";
 import { useData } from "../context/DataContext.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 const SkillsDetailsPage = () => {
   const { id } = useParams();
