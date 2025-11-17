@@ -7,7 +7,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);  // 🔥 THE MISSING PIECE
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       console.warn("Failed to read auth", err);
     }
 
-    setLoading(false);  // 🔥 CRITICAL — do NOT redirect until done
+    setLoading(false);  
   }, []);
 
   const login = (u) => {
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isAuthenticated: !!user,
-        loading,       // 🔥 expose loading
+        loading,  
       }}
     >
       {children}

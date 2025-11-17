@@ -5,7 +5,6 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  // Wait for auth to finish loading from localStorage
   if (loading) {
     return <div>Loading...</div>;
   }

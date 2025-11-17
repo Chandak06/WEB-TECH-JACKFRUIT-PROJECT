@@ -27,7 +27,6 @@ const handleSubmit = async (e) => {
       return;
     }
 
-    // Successful login
     toast.success('Login successful! Welcome back!');
     login({ name: data.user.name, email: data.user.email });
     navigate('/');

@@ -6,7 +6,7 @@ const DataContext = createContext(null);
 export const DataProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth(); // Get user from AuthContext instead of managing separately
+  const { user } = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [skills, setSkills] = useState([]);

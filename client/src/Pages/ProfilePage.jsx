@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext.jsx'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import "../styles/ProfilePage.css";
 import { useData } from "../context/DataContext.jsx";
+import React, { useEffect, useState } from "react";
 
 const ProfilePage = () => {
   const { profile: ctxProfile, updateProfile } = useData();
@@ -15,14 +14,12 @@ const ProfilePage = () => {
   const [newOffered, setNewOffered] = useState("");
   const [newWanted, setNewWanted] = useState("");
 
-  // Sync local state with context profile
   useEffect(() => {
     if (ctxProfile) {
       setProfile(ctxProfile);
     }
   }, [ctxProfile]);
 
-  // If profile is not loaded yet → prevent crash
   if (!profile) {
     return (
       <div style={{ padding: 20, textAlign: "center" }}>
@@ -31,9 +28,6 @@ const ProfilePage = () => {
     );
   }
 
-  // ===========================
-  // SAVE PROFILE
-  // ===========================
   const save = async () => {
     try {
       const res = await fetch(
@@ -51,7 +45,6 @@ const ProfilePage = () => {
         return;
       }
 
-      // Update global context
       updateProfile(profile);
 
       alert("Profile updated successfully!");
@@ -62,17 +55,11 @@ const ProfilePage = () => {
     }
   };
 
-  // ===========================
-  // RESET CHANGES
-  // ===========================
   const reset = () => {
     setProfile(ctxProfile);
     setEditing(false);
   };
 
-  // ===========================
-  // ADD / REMOVE SKILLS
-  // ===========================
   const addOffered = () => {
     const v = newOffered.trim();
     if (!v) return;
@@ -111,9 +98,6 @@ const ProfilePage = () => {
     });
   };
 
-  // ================================================================
-  // UI STARTS HERE — COMPLETELY SAFE
-  // ================================================================
   return (
     <div className="pf-root">
       <div className="pf-card">
@@ -203,7 +187,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* SKILLS SECTION */}
           <aside className="pf-right">
             <div className="panel">
               <h3>Offered skills</h3>

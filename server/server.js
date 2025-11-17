@@ -28,7 +28,6 @@ async function connectDB() {
 
 connectDB();
 
-// Use the same db connection for all requests
 app.post('/api/signup', async (req, res) => {
   const { name, email, password, location, bio, offered, wanted } = req.body;
 
@@ -93,7 +92,6 @@ app.put('/api/profile/:email', async (req, res) => {
   try {
     const users = db.collection('users');
 
-    // Find and update user profile
     const result = await users.updateOne(
       { email },
       { $set: { name, location, bio, offered, wanted } }
@@ -122,7 +120,6 @@ app.get('/api/profile/:email', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Hide password hash before sending to frontend
     const { hashedPassword, ...userData } = user;
 
     res.status(200).json(userData);
@@ -212,7 +209,7 @@ app.get('/api/users', async (req, res) => {
     const users = db.collection('users');
 
     const allUsers = await users.find({}).toArray();
-    // Remove password hashes before sending
+    // ...existing code...
     const sanitizedUsers = allUsers.map(({ password, ...user }) => user);
     res.status(200).json(sanitizedUsers);
   } catch (err) {
