@@ -15,7 +15,8 @@ const DashBoardPage = () => {
     title: '',
     level: '',
     desc: '',
-    tags: []
+    tags: [],
+    wantedSkill: ''
   });
 
   const displayUser = {
@@ -31,7 +32,8 @@ const DashBoardPage = () => {
       title: skill.title,
       level: skill.level,
       desc: skill.desc,
-      tags: skill.tags || []
+      tags: skill.tags || [],
+      wantedSkill: skill.wantedSkill || ''
     });
   };
 
@@ -154,11 +156,20 @@ const DashBoardPage = () => {
   return (
     <div className="db-root">
       <header className="db-header">
-        <h1>Dashboard</h1>
-        <p className="db-sub">
-          Welcome back, {displayUser.name.split(" ")[0]} — here are your skills and
-          requests.
-        </p>
+        <div>
+          <h1>Dashboard</h1>
+          <p className="db-sub">
+            Welcome back, {displayUser.name.split(" ")[0]} — here are your skills and
+            requests.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+          <button className="btn" onClick={() => navigate('/skills')}>Browse Skills</button>
+          <button className="btn" onClick={() => navigate('/people')}>People</button>
+          <button className="btn" onClick={() => navigate('/requests')}>Requests</button>
+          <button className="btn" onClick={() => navigate('/profile')}>Profile</button>
+          <button className="btn-primary" onClick={() => navigate('/offer-skill')}>Offer Skill</button>
+        </div>
       </header>
 
       <div className="db-grid">
@@ -208,6 +219,11 @@ const DashBoardPage = () => {
                       <span className="level">{s.level}</span>
                     </div>
                     <p className="muted">{s.desc}</p>
+                    {s.wantedSkill && (
+                      <div style={{ margin: '8px 0', padding: '8px', background: '#e3f2fd', borderRadius: '6px', fontSize: '13px' }}>
+                        <strong>🔄 You want to learn:</strong> <span style={{ color: '#1976d2', fontWeight: '600' }}>{s.wantedSkill}</span>
+                      </div>
+                    )}
                     <div className="skill-actions">
                       <button className="btn" onClick={() => handleEditSkill(s)}>Edit</button>
                       <button className="btn" onClick={() => handleDeleteSkill(s._id)}>Delete</button>
@@ -227,10 +243,18 @@ const DashBoardPage = () => {
               {(requests || []).map((s) => (
                 <div key={s._id || s.id} className="skill-card">
                   <div className="skill-head">
-                    <h3>{s.skill}</h3>
+                    <h3>Skill Swap</h3>
                     <span className="level">{s.status}</span>
                   </div>
-                  <p className="muted">Requested by {s.from}</p>
+                  <div style={{ margin: '8px 0', padding: '8px', background: '#f8f9fa', borderRadius: '6px' }}>
+                    <p style={{ marginBottom: '4px' }}>
+                      👉 <strong>{s.from}</strong> wants: <span style={{ color: '#4CAF50', fontWeight: '600' }}>{s.skill}</span>
+                    </p>
+                    <p>
+                      👈 <strong>{s.from}</strong> offers: <span style={{ color: '#2196F3', fontWeight: '600' }}>{s.requesterSkill || 'Not specified'}</span>
+                    </p>
+                  </div>
+                  <p className="muted">Request from {s.from} · {s.date}</p>
                   <div className="skill-actions">
                     {s.status === 'pending' ? (
                       <>
@@ -316,6 +340,16 @@ const DashBoardPage = () => {
                   type="text"
                   value={editForm.tags.join(', ')}
                   onChange={(e) => setEditForm({ ...editForm, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                />
+              </label>
+
+              <label>
+                Skill You Want to Learn (Optional)
+                <input
+                  type="text"
+                  value={editForm.wantedSkill}
+                  onChange={(e) => setEditForm({ ...editForm, wantedSkill: e.target.value })}
+                  placeholder="e.g. Python, Public Speaking"
                 />
               </label>
 

@@ -11,6 +11,7 @@ const SkillsPage = () => {
   const { user } = useAuth();
   const [q, setQ] = useState("");
   const [tagFilter, setTagFilter] = useState("");
+  const [selectedSkillForSwap, setSelectedSkillForSwap] = useState({});
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -38,12 +39,20 @@ const SkillsPage = () => {
   }, []);
 
 const handleRequest = async (skill) => {
+  const mySkill = selectedSkillForSwap[skill.id];
+  
+  if (!mySkill) {
+    toast.warning("Please select what skill you're offering in return");
+    return;
+  }
+
   const requester = user?.name || profile?.name || "Anonymous";
   const payload = {
     skill: skill.title,
+    requesterSkill: mySkill,
     from: requester,
     to: skill.provider || "Unknown",
-    message: `Request for ${skill.title}`,
+    message: `I want to learn ${skill.title} and can teach ${mySkill} in return`,
     date: new Date().toISOString().split("T")[0],
     status: "pending",
   };
@@ -84,10 +93,18 @@ const handleRequest = async (skill) => {
   return (
     <div className="skills-root">
       <header className="skills-header">
-        <h1>Available Skills</h1>
-        <p className="muted">
-          Browse micro-lessons and practice sessions offered by classmates.
-        </p>
+        <div>
+          <h1>Available Skills</h1>
+          <p className="muted">
+            Browse micro-lessons and practice sessions offered by classmates.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+          <button className="btn" onClick={() => window.location.href = '/dashboard'}>Dashboard</button>
+          <button className="btn" onClick={() => window.location.href = '/requests'}>Requests</button>
+          <button className="btn" onClick={() => window.location.href = '/people'}>People</button>
+          <button className="btn-primary" onClick={() => window.location.href = '/offer'}>Offer Skill</button>
+        </div>
       </header>
 
       <div className="skills-controls">
@@ -137,9 +154,31 @@ const handleRequest = async (skill) => {
               </div>
             </div>
             <p className="desc">{s.desc}</p>
+            {s.wantedSkill && (
+              <div style={{ margin: '8px 0', padding: '8px', background: '#e3f2fd', borderRadius: '6px', fontSize: '13px' }}>
+                <strong>🔄 Wants to learn:</strong> <span style={{ color: '#1976d2', fontWeight: '600' }}>{s.wantedSkill}</span>
+              </div>
+            )}
+            <div style={{ marginTop: '12px' }}>
+              <label style={{ display: 'block', fontSize: '12px', marginBottom: '4px', color: '#666' }}>
+                Your skill to offer in return:
+              </label>
+              <select 
+                value={selectedSkillForSwap[s.id] || ''} 
+                onChange={(e) => setSelectedSkillForSwap({...selectedSkillForSwap, [s.id]: e.target.value})}
+                style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #ddd' }}
+              >
+                <option value="">-- Select your skill --</option>
+                {profile?.offered?.map((offeredSkill, idx) => (
+                  <option key={idx} value={offeredSkill}>{offeredSkill}</option>
+                ))}
+              </select>
+            </div>
             <div className="skill-actions">
               <button className="btn" onClick={() => handleRequest(s)}>Request</button>
-              <button className="btn-ghost">Message</button>
+              <Link to={`/skill/${s.id}`}>
+                <button className="btn-ghost">View Details</button>
+              </Link>
             </div>
           </article>
         ))}

@@ -130,7 +130,7 @@ app.get('/api/profile/:email', async (req, res) => {
 });
 
 app.post('/api/skills', async (req, res) => {
-  const { title, level, tags, desc, provider } = req.body;
+  const { title, level, tags, desc, wantedSkill, provider } = req.body;
 
   try {
     const skills = db.collection('skills');
@@ -140,6 +140,7 @@ app.post('/api/skills', async (req, res) => {
       level,
       tags,
       desc,
+      wantedSkill: wantedSkill || '',
       provider,
       createdAt: new Date(),
     };
@@ -166,13 +167,13 @@ app.get('/api/skills', async (req, res) => {
 
 app.put('/api/skills/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, level, tags, desc } = req.body;
+  const { title, level, tags, desc, wantedSkill } = req.body;
 
   try {
     const skills = db.collection('skills');
     const result = await skills.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { title, level, tags, desc, updatedAt: new Date() } }
+      { $set: { title, level, tags, desc, wantedSkill: wantedSkill || '', updatedAt: new Date() } }
     );
 
     if (result.matchedCount === 0) {
@@ -219,13 +220,14 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.post('/api/requests', async (req, res) => {
-  const { skill, from, to, message, date, status } = req.body;
+  const { skill, requesterSkill, from, to, message, date, status } = req.body;
 
   try {
     const requests = db.collection('requests');
 
     const newRequest = {
       skill,
+      requesterSkill: requesterSkill || '',
       from,
       to,
       message,

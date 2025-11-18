@@ -11,6 +11,7 @@ const OfferSkillPage = () => {
   const [level, setLevel] = useState("Beginner");
   const [tags, setTags] = useState("");
   const [desc, setDesc] = useState("");
+  const [wantedSkill, setWantedSkill] = useState("");
   const { profile } = useData();
   const { user } = useAuth();
 
@@ -30,6 +31,7 @@ const handleSubmit = async (e) => {
       .map((t) => t.trim())
       .filter(Boolean),
     desc,
+    wantedSkill: wantedSkill.trim() || "",
     provider: profile?.name || (user && user.name) || "Anonymous",
   };
 
@@ -59,10 +61,19 @@ const handleSubmit = async (e) => {
   return (
     <div className="offer-root">
       <div className="offer-card">
-        <h2>Offer a Skill</h2>
-        <p className="muted">
-          Create a short listing so classmates can request your session.
-        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div>
+            <h2>Offer a Skill</h2>
+            <p className="muted">
+              Create a short listing so classmates can request your session.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button className="btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+            <button className="btn" onClick={() => navigate('/skills')}>Skills</button>
+            <button className="btn" onClick={() => navigate('/people')}>People</button>
+          </div>
+        </div>
 
         <form className="offer-form" onSubmit={handleSubmit}>
           <label>
@@ -101,6 +112,16 @@ const handleSubmit = async (e) => {
               placeholder="Briefly describe what you'll teach and how long a session takes."
               rows={5}
             />
+          </label>
+
+          <label>
+            Skill I Want to Learn in Return
+            <input
+              value={wantedSkill}
+              onChange={(e) => setWantedSkill(e.target.value)}
+              placeholder="e.g. Python, Public Speaking, Photography"
+            />
+            <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>What skill would you like to learn from someone in exchange?</small>
           </label>
 
           <div className="form-actions">

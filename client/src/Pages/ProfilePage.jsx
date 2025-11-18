@@ -110,6 +110,10 @@ const ProfilePage = () => {
           </div>
 
           <div className="pf-controls">
+            <button className="btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+            <button className="btn" onClick={() => navigate('/skills')}>Skills</button>
+            <button className="btn" onClick={() => navigate('/people')}>People</button>
+            
             {editing ? (
               <>
                 <button className="btn" onClick={reset}>Cancel</button>

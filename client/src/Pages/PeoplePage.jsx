@@ -62,10 +62,18 @@ const PeoplePage = () => {
   return (
     <div className="people-root">
       <header className="people-header">
-        <h1>Browse People</h1>
-        <p className="muted">
-          Connect with classmates and discover what skills they offer or need.
-        </p>
+        <div>
+          <h1>Browse People</h1>
+          <p className="muted">
+            Connect with classmates and discover what skills they offer or need.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+          <button className="btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+          <button className="btn" onClick={() => navigate('/skills')}>Skills</button>
+          <button className="btn" onClick={() => navigate('/requests')}>Requests</button>
+          <button className="btn-primary" onClick={() => navigate('/offer')}>Offer Skill</button>
+        </div>
       </header>
 
       <div className="people-controls">

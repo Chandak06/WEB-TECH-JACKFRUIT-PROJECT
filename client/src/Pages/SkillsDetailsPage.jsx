@@ -9,6 +9,7 @@ const SkillsDetailsPage = () => {
   const navigate = useNavigate();
   const { profile, skills } = useData();
   const [skill, setSkill] = useState(null);
+  const [mySkillToOffer, setMySkillToOffer] = useState("");
 
   useEffect(() => {
     const foundSkill = skills.find(s => s._id === id || s.id === id);
@@ -32,11 +33,17 @@ const SkillsDetailsPage = () => {
   }
 
   const handleRequest = async () => {
+    if (!mySkillToOffer) {
+      toast.warning("Please select what skill you're offering in return");
+      return;
+    }
+
     const payload = {
       skill: skill.title,
+      requesterSkill: mySkillToOffer,
       from: profile?.name ?? "Anonymous",
       to: skill.provider || "Unknown",
-      message: "Request via app",
+      message: `I want to learn ${skill.title} and can teach ${mySkillToOffer} in return`,
       date: new Date().toISOString().split("T")[0],
       status: "pending",
     };
@@ -90,6 +97,32 @@ const SkillsDetailsPage = () => {
             ))}
           </div>
 
+          {skill.wantedSkill && (
+            <div style={{ margin: '16px 0', padding: '12px', background: '#e3f2fd', borderRadius: '8px', borderLeft: '4px solid #2196F3' }}>
+              <strong>🔄 {skill.provider} wants to learn:</strong> <span style={{ color: '#1976d2', fontWeight: '600' }}>{skill.wantedSkill}</span>
+            </div>
+          )}
+
+          <section className="swap-section">
+            <h3>Your Skill to Offer in Exchange</h3>
+            <p className="muted">Select what skill you'll teach in return for learning {skill.title}</p>
+            <select 
+              value={mySkillToOffer} 
+              onChange={(e) => setMySkillToOffer(e.target.value)}
+              style={{ width: '100%', padding: '10px', marginTop: '8px', borderRadius: '6px', border: '1px solid #ddd' }}
+            >
+              <option value="">-- Select a skill you can offer --</option>
+              {profile?.offered?.map((offeredSkill, idx) => (
+                <option key={idx} value={offeredSkill}>{offeredSkill}</option>
+              ))}
+            </select>
+            {(!profile?.offered || profile.offered.length === 0) && (
+              <p style={{ color: '#ff6b6b', marginTop: '8px', fontSize: '14px' }}>
+                ⚠️ Add skills to your profile first to offer in exchange
+              </p>
+            )}
+          </section>
+
           <section className="provider-card">
             <h3>Offered by</h3>
             <div className="prov-row">
@@ -105,10 +138,9 @@ const SkillsDetailsPage = () => {
               </div>
             </div>
             <div style={{ marginTop: 12 }}>
-              <button className="btn">Message</button>
-              <button className="btn" style={{ marginLeft: 8 }}>
-                View profile
-              </button>
+              <button className="btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+              <button className="btn" onClick={() => navigate('/skills')} style={{ marginLeft: 8 }}>All Skills</button>
+              <button className="btn" onClick={() => navigate('/people')} style={{ marginLeft: 8 }}>People</button>
             </div>
           </section>
         </div>

@@ -57,11 +57,18 @@ const RequestPage = () => {
   return (
     <div className="req-root">
       <header className="req-head">
-        <h1>Swap Requests</h1>
-        <p className="muted">
-          Pending skill swap requests from classmates. Accept to schedule or
-          decline if not available.
-        </p>
+        <div>
+          <h1>Swap Requests</h1>
+          <p className="muted">
+            Pending skill swap requests from classmates. Accept to schedule or
+            decline if not available.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="btn" onClick={() => navigate('/dashboard')}>Dashboard</button>
+          <button className="btn" onClick={() => navigate('/skills')}>Skills</button>
+          <button className="btn" onClick={() => navigate('/people')}>People</button>
+        </div>
       </header>
 
       <div className="req-list">
@@ -73,9 +80,16 @@ const RequestPage = () => {
           <div key={r._id} className={`req-card ${r.status}`}>
             <div className="req-main">
               <div className="req-info">
-                <h3>{r.skill}</h3>
+                <h3>Skill Swap Request</h3>
+                <div className="swap-details" style={{ margin: '12px 0', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <strong>{r.from}</strong> wants to learn: <span style={{ color: '#4CAF50', fontWeight: '600' }}>{r.skill}</span>
+                  </div>
+                  <div>
+                    <strong>{r.from}</strong> will teach you: <span style={{ color: '#2196F3', fontWeight: '600' }}>{r.requesterSkill || 'Not specified'}</span>
+                  </div>
+                </div>
                 <div className="meta">
-                  from <strong>{r.from}</strong> ·{" "}
                   <span className="muted">{r.date}</span>
                 </div>
                 <p className="msg">{r.message}</p>
